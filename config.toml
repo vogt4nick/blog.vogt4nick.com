@@ -1,0 +1,4 @@
+baseURL = 'http://blog.vogt4nick.com'
+languageCode = 'de-at'
+title = 'Mein Neues Hugo Site'
+theme = 'ananke'

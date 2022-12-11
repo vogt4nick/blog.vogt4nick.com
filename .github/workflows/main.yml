@@ -2,30 +2,31 @@ name: Build & Deploy
 on: [push]
 
 env:
-  JEKYLL_SITE_DIR: _site/
+  HUGO_SITE_DIR: _site/
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      # Use GitHub Actions' cache to shorten build times and decrease load on servers
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v3
         with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
+          submodules: true  # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0    # Fetch all history for .GitInfo and .Lastmod
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: latest
       - name: Build site
-        uses: helaili/jekyll-action@v2
+        run: hugo --minify
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          build_only: true
-          jekyll_build_options: --destination ${{ env.JEKYLL_SITE_DIR }}
+          publish_dir: ${{ env.HUGO_SITE_DIR }}
       - name: Archive site
         uses: actions/upload-artifact@master
         with:
           name: site
-          path: ${{ env.JEKYLL_SITE_DIR }}
+          path: ${{ env.HUGO_SITE_DIR }}
   deploy:
     if: github.ref == 'refs/heads/main'
     needs: build
@@ -35,11 +36,11 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: site
-          path: ${{ env.JEKYLL_SITE_DIR }}
-      - name: Deploy docs
+          path: ${{ env.HUGO_SITE_DIR }}
+      - name: Deploy site
         # awscli comes pre-installed per docs
         # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-software
-        run: aws s3 sync ${{ env.JEKYLL_SITE_DIR }} s3://blog.vogt4nick.com --region=us-east-1 --delete --acl public-read --no-progress
+        run: aws s3 sync ${{ env.HUGO_SITE_DIR }} s3://blog.vogt4nick.com --region=us-east-1 --delete --acl public-read --no-progress
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
