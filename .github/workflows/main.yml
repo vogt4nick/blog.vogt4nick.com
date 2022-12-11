@@ -19,8 +19,6 @@ jobs:
       - name: Update theme
         # Required if theme is added as submodule
         run: git submodule update --init --recursive
-      - name: List all recursively
-        run: ls -Ra
       - name: Build site
         run: hugo --minify --destination ${{ env.HUGO_SITE_DIR }}
       - name: Archive site
