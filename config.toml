@@ -1,6 +1,6 @@
 baseURL = 'http://blog.vogt4nick.com/'
 author = "Nick Vogt"
-paginate = inf
+paginate = 100
 languageCode = 'en-us'
 
 theme = 'paper'
