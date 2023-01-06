@@ -1,4 +1,13 @@
 baseURL = 'http://blog.vogt4nick.com/'
-languageCode = 'de-at'
-title = 'A Blog.'
+author = "Nick Vogt"
+paginate = inf
+languageCode = 'en-us'
+
 theme = 'paper'
+
+[params]
+  color = 'linen'
+
+  # misc
+  disableHLJS = true
+  monoDarkIcon = false
