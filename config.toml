@@ -1,4 +1,13 @@
-baseURL = 'http://example.org/'
+baseURL = 'http://blog.vogt4nick.com/'
+author = "Nick Vogt"
+paginate = 100
 languageCode = 'en-us'
-title = 'My New Hugo Site'
-theme = 'ananke'
+
+theme = 'paper'
+
+[params]
+  color = 'linen'
+
+  # misc
+  disableHLJS = true
+  monoDarkIcon = false
